@@ -1,0 +1,2 @@
+# playgrounds
+Capsule Project Playgrounds
