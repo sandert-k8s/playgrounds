@@ -1,0 +1,17 @@
+tenants:
+  - name: solar
+    energy: renewable
+  - name: green
+    energy: renewable
+  - name: wind
+    energy: renewable
+  - name: gas
+    energy: non-renewable
+  - name: coal
+    energy: non-renewable
+
+networkpolicies:
+  dns:
+    podSelector:
+      matchLabels:
+        k8s-app: kube-dns

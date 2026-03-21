@@ -1,0 +1,9 @@
+{{- range .Values.tenants }}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ .name }}-{{ .energy }}
+  labels:
+    capsule.clastix.io/tenant: {{ .name }}
+{{- end }}

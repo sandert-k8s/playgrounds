@@ -1,0 +1,5 @@
+apiVersion: v2
+name: capsule-demo-environment
+description: A Helm chart that creates a demo environment for the Capsule project with several Tenants.
+type: application
+version: '0'

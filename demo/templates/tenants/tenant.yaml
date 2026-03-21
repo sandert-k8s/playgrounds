@@ -1,0 +1,48 @@
+{{- range .Values.tenants }}
+---
+apiVersion: capsule.clastix.io/v1beta2
+kind: Tenant
+metadata:
+  labels:
+    tenant: {{ .name }}
+    energy: {{ .energy }}
+  name: {{ .name }}
+spec:
+  permissions:
+    matchOwners:
+    - matchLabels:
+        customer: {{ .name }}
+  namespaceOptions:
+    additionalMetadataList:
+      - labels:
+          myCustomNamespaceLabel: {{ .name }}
+          renewable: {{ .energy }}
+    forbiddenAnnotations:
+      deniedRegex: ^team\.mycompany\.nl*
+    forbiddenLabels:
+      deniedRegex: ^team\.mycompany\.nl*
+      denied:
+        - company.com/system
+    managedMetadataOnly: false
+    quota: 50
+  preventDeletion: true
+  resourceQuotas:
+    items:
+      - hard:
+          secrets: '400'
+          services.loadbalancers: '5'
+          persistentvolumeclaims: '150'
+          resourcequotas: '50'
+          requests.memory: 10Gi
+          pods: '20'
+          requests.storage: 5Gi
+          limits.cpu: '5'
+          limits.memory: 10Gi
+          configmaps: '400'
+          services: '20'
+          requests.cpu: '5'
+    scope: Tenant
+  imagePullPolicies:
+    - Always
+  cordoned: false
+{{- end }}

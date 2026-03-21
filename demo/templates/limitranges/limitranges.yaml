@@ -1,0 +1,23 @@
+---
+apiVersion: capsule.clastix.io/v1beta2
+kind: GlobalTenantResource
+metadata:
+  name: limitrange
+spec:
+  tenantSelector: {}
+  resyncPeriod: 60s
+  resources:
+    - rawItems:
+      - apiVersion: v1
+        kind: LimitRange
+        metadata:
+          name: default-resources
+        spec:
+          limits:
+          - default: # this section defines default limits
+              cpu: 200m
+              memory: 256Mi
+            defaultRequest:  # this section defines default requests
+              cpu: 200m
+              memory: 256Mi
+            type: Container

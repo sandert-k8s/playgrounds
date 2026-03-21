@@ -1,0 +1,60 @@
+---
+apiVersion: capsule.clastix.io/v1beta2
+kind: GlobalTenantResource
+metadata:
+  name: default-networkpolicies
+  namespace: capsule-system
+spec:
+  resyncPeriod: 60s
+  tenantSelector: {}
+  resources:
+    - rawItems:
+        - apiVersion: networking.k8s.io/v1
+          kind: NetworkPolicy
+          metadata:
+            name: default-policy
+          spec:
+            # Apply to all pods in this namespace
+            podSelector: {}
+            policyTypes:
+              - Ingress
+              - Egress
+            ingress:
+              # Allow traffic from the same namespace (intra-namespace communication)
+              - from:
+                  - podSelector: {}
+
+              # Allow traffic from all namespaces within the tenant
+              - from:
+                  - namespaceSelector:
+                      matchLabels:
+                        capsule.clastix.io/tenant: "{{ "{{tenant.name}}" }}"
+
+              # Allow ingress from other namespaces labeled (System Namespaces, eg. Monitoring, Ingress)
+              - from:
+                  - namespaceSelector:
+                      matchLabels:
+                        company.com/system: "true"
+
+            egress:
+              # Allow DNS to CoreDNS pods
+              - to:
+                  - namespaceSelector: {}
+                    podSelector:
+                      matchLabels:
+                        {{ with .Values.networkpolicies.dns.podSelector.matchLabels }}
+                        {{- range $key, $value := . }}
+                        {{ $key }}: {{ $value }}
+                        {{- end }}
+                        {{ end }}
+                ports:
+                  - protocol: UDP
+                    port: 53
+                  - protocol: TCP
+                    port: 53
+
+              # Allow traffic to all namespaces within the tenant
+              - to:
+                  - namespaceSelector:
+                      matchLabels:
+                        capsule.clastix.io/tenant: "{{ "{{tenant.name}}" }}"

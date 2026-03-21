@@ -1,0 +1,36 @@
+{{- range .Values.tenants }}
+---
+apiVersion: capsule.clastix.io/v1beta2
+kind: TenantOwner
+metadata:
+  labels:
+    customer: {{ .name }}
+  name: {{ .name }}-owner-sa
+spec:
+  aggregate: true
+  clusterRoles:
+    - admin
+    - capsule-namespace-deleter
+  kind: ServiceAccount
+  name: system:serviceaccount:capsule-system:{{ .name }}-owner
+---
+apiVersion: capsule.clastix.io/v1beta2
+kind: TenantOwner
+metadata:
+  labels:
+    customer: {{ .name }}
+  name: {{ .name }}-owner-user
+spec:
+  aggregate: true
+  clusterRoles:
+    - admin
+    - capsule-namespace-deleter
+  kind: User
+  name: {{ .name }}-owner
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .name }}-owner
+  namespace: capsule-system
+{{- end }}
