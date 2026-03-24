@@ -18,9 +18,9 @@ spec:
           myCustomNamespaceLabel: {{ .name }}
           renewable: {{ .energy }}
     forbiddenAnnotations:
-      deniedRegex: ^team\.mycompany\.nl*
+      deniedRegex: ^team\.mycompany\.com*
     forbiddenLabels:
-      deniedRegex: ^team\.mycompany\.nl*
+      deniedRegex: ^team\.mycompany\.com*
       denied:
         - company.com/system
     managedMetadataOnly: false
